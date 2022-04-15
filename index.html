@@ -16,6 +16,8 @@
 
 	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
 	<link rel="shortcut icon" href="assets/img/favicon.ico">
+	<script src="assets/js/jquery-1.12.4.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
 	<style>
 		img {
 			max-width: 100%;
@@ -24,17 +26,47 @@
 		
 		#content {
 			text-align: center;
+			padding: 30px;
+		}
+		#canv1 {
+			border: 10px double #C0C0C0;
+			padding: 4px;
+			background-color: white;
+			width: 100%;
+			height: auto;
+			max-width: 591px;
 		}
 	</style>
 </head>
 <body>
 	<div class="container">
-		<div class="row" style="border: 1px solid rgb(204, 204, 204); border-radius: 15px; box-shadow: rgba(0, 0, 0, 0.075) 0px 0.125rem 1.25rem !important; height: auto !important;padding: 20px;">
+		<div class="row" style="border: 1px solid rgb(204, 204, 204); border-radius: 15px; box-shadow: rgba(0, 0, 0, 0.075) 0px 0.125rem 1.25rem !important; height: auto !important;">
+			<div class="col-md-12" style="margin-bottom: 25px;margin-top: 25px;">
+				<h1>Cách tạo sigil như thế nào ?</h1> 
+				<p><i>Nhập cụm từ mong muốn để tạo.</i></p>
+			</div>
+			
+			<div class="col-md-12" style="margin-bottom: 25px;">
+				<div class="col-md-12">
+					<div class="form-group" style="text-align:center;">
+						<textarea class="form-control center-block" cols="10" placeholder="Nhập ý định của bạn" name="Q1" rows="2" id="Q1" onclick="clearq();"></textarea>
+						<br>
+						<input id="B1" name="B1" class="btn btn-success btn-lg" type="button" value="COPY" onclick="getpng();" >&nbsp;
+						<input id="B2" name="B2" class="btn btn-success btn-lg" type="button" value="CREATE" onclick="chktext();">&nbsp;
+						<input id="B3" name="B3" class="btn btn-danger btn-lg" type="button" value="CLEAR" onclick="clearall();">
+					</div>
+				</div>
+				<div class="col-md-12" style="text-align:center;margin-bottom: 40px;">
+					<canvas class="img-responsive center-block" id="canv1" width="591" height="591">Your browser does not support the HTML5 canvas tag.</canvas>
+				</div>
+			</div>
+			
 			<article id="content" role="main">
 				<div id="ftwp-postcontent">
-					<p style="text-align: justify;">
-						<strong><a href="sigil-la-gi-cach-tao-sigil-don-gian.html">Sigil </a>là gì?</strong> Cách tạo sigil như thế nào?
-					</p>
+					<h2 style="text-align: justify;">
+						Sigil là gì? Cách tạo sigil như thế nào?
+					</h2>
+					<br>
 					<figure class="wp-caption aligncenter">
 						<img fifu-featured="1" title="Tìm hiểu sigil là gì" src="assets/img/sigil-la-gi.jpg" alt="Sigil là gì? Cách tạo sigil đơn giản" width="600" height="338" />
 						<figcaption class="wp-caption-text">Sigil là gì</figcaption>
@@ -198,5 +230,225 @@
 		<p class="mb-0">© 2022 Sigli Online</p>
 	  </div>
 	</footer>
+	<script>
+		var canvas = document.getElementById("canv1");
+		var ctx = canvas.getContext("2d");
+		ctx.font = "20px Arial";
+		ctx.strokeStyle = "black";
+		ctx.fillStyle = "black";
+		ctx.lineWidth = 3;
+		var ratio = 0;
+		var x1 = 0;
+		var x2 = 0;
+		var y1 = 0;
+		var y2 = 0;
+		var ask = 0;
+		var b = 0;
+		var backg = "";
+		var lt = "";
+		var loaded = false;
+		var sig$ = "";
+		var timeout1 = 0;
+		var timeout2 = 0;
+		var tx = "";
+		var x = 0;
+		var y = 0;
+		var lu = new Array("B", "C", "D", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "X", "Y", "Z");
+		var ll = new Array("b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z");
+		var lx = new Array(295, 401, 101, 534, 56, 489, 189, 295, 371, 156, 466, 124, 434, 219, 295, 341, 211, 397, 193, 379, 249);
+		var ly = new Array(62, 528, 156, 362, 362, 156, 528, 132, 464, 200, 346, 346, 200, 464, 202, 401, 242, 330, 330, 242, 401);
+		var seqx = new Array(25);
+		var seqy = new Array(25);
+		var symx = new Array(25);
+		var symy = new Array(25);
+		var parch = new Image();
+		parch.src = "assets/img/sigil1.jpg";
+		parch.className = "img-responsive";
+		window.onload = imload();
+		function imload() {
+			loaded = true;
+			timeout1 = setTimeout("mycanv();", 1000);
+		}
+		function clearq() {
+			if (ask == 1) {
+				return;
+			}
+			ask = 1;
+			ctx.clearRect(0, 0, 591, 591);
+			ctx.drawImage(backg, 0, 0);
+			document.getElementById("Q1").value = "";
+			document.getElementById("B2").style.visibility = "visible";
+		}
+		function chktext() {
+			tx = document.getElementById("Q1").value;
+			if (tx.length < 2) {
+				alert("Nhập ý định của bạn");
+				return;
+			}
+			getstring();
+			cutstring();
+			if (sig$.length < 2) {
+				alert("Make your Intention more precise");
+				return;
+			}
+			document.getElementById("B2").style.visibility = "hidden";
+			ctx.clearRect(0, 0, 591, 591);
+			ctx.drawImage(backg, 0, 0);
+			setseq();
+			draw0();
+			animate();
+			timeout1 = setTimeout("draw1();", 5500);
+			draw2();
+		}
+		function cutstring() {
+			for (x = 1; x < sig$.length; x++) {
+				for (y = 0; y < x; y++) {
+					if (sig$.charAt(x) == sig$.charAt(y)) {
+						sig$ = sig$.substring(0, x) + sig$.substring(x + 1, sig$.length);
+						x--;
+					}
+				}
+			}
+		}
+		function getstring() {
+			sig$ = "";
+			for (x = 0; x < tx.length; x++) {
+				lt = tx.charAt(x);
+				checklet();
+				sig$ = sig$ + lt;
+			}
+		}
+		function checklet() {
+			for (y = 0; y < 21; y++) {
+				if (lt == lu[y] || lt == ll[y]) {
+					if (lt == ll[y]) {
+						lt = lu[y];
+					}
+					ltg = lt;
+					return;
+				}
+			}
+			lt = "";
+		}
+		function clearall() {
+			ask = 0;
+			ctx.clearRect(0, 0, 591, 591);
+			ctx.beginPath();
+			backg = parch;
+			ctx.drawImage(backg, 0, 0);
+			ctx.closePath();
+			document.getElementById("Q1").value = "Nhập ý định của bạn";
+			document.getElementById("B1").style.visibility = "hidden";
+			document.getElementById("B2").style.visibility = "hidden";
+			document.getElementById("B3").style.visibility = "hidden";
+		}
+		function mycanv() {
+			clearall();
+			backg = parch;
+			document.getElementById("Q1").value = "Nhập ý định của bạn";
+			rset1();
+		}
+		function rset1() {
+			ask = 0;
+			sig$ = "BCDFGHJKLMNPQRSTVWXYZ";
+			ctx.clearRect(0, 0, 591, 591);
+			ctx.drawImage(backg, 0, 0);
+			setseq();
+			draw0();
+			animate();
+			timeout1 = setTimeout("draw1();", 5500);
+			draw2();
+		}
+		function getpng() {
+			var ca = document.getElementById("canv1");
+			var da = ca.toDataURL("image/png");
+			var wa = window.open("about:blank", "image from canvas");
+			wa.document.write("<img src='" + da + "' alt='from canvas'/>");
+		}
+		function setseq() {
+			for (y = 0; y < sig$.length; y++) {
+				for (x = 0; x < 21; x++) {
+					if (sig$.charAt(y) == lu[x]) {
+						seqx[y] = lx[x];
+						seqy[y] = ly[x];
+					}
+				}
+			}
+			for (y = 0; y < sig$.length; y++) {
+				symx[y] = 590 - seqx[y];
+				symy[y] = 590 - seqy[y];
+			}
+		}
+		function draw0() {
+			ctx.beginPath();
+			ctx.arc(seqx[0], seqy[0], 10, 0, 2 * Math.PI, false);
+			ctx.stroke();
+			ctx.closePath;
+			ctx.beginPath();
+			ctx.arc(symx[0], seqy[0], 10, 0, 2 * Math.PI, false);
+			ctx.stroke();
+			ctx.closePath;
+		}
+		function draw1() {
+			if (ask == 1) {
+				document.getElementById("B1").style.visibility = "visible";
+				document.getElementById("B3").style.visibility = "visible";
+			}
+			ctx.beginPath();
+			ctx.arc(seqx[sig$.length - 1], seqy[sig$.length - 1], 7, 0, 2 * Math.PI, false);
+			ctx.fill();
+			ctx.closePath;
+			if (ask == 1) {
+				ctx.beginPath();
+				ctx.arc(symx[sig$.length - 1], seqy[sig$.length - 1], 7, 0, 2 * Math.PI, false);
+				ctx.fill();
+				ctx.closePath;
+			}
+		}
+		function draw2() {
+			ctx.beginPath();
+			ctx.fill();
+			ctx.closePath();
+			ctx.beginPath();
+			ctx.arc(295, 295, 280, 0, 2 * Math.PI, false);
+			ctx.arc(295, 295, 277, 0, 2 * Math.PI, false);
+			ctx.arc(295, 295, 275, 0, 2 * Math.PI, false);
+			ctx.stroke();
+			ctx.closePath();
+		}
+		function drawLine(x1, y1, x2, y2, ratio) {
+			ctx.beginPath();
+			ctx.moveTo(x1, y1);
+			x2 = x1 + ratio * (x2 - x1);
+			y2 = y1 + ratio * (y2 - y1);
+			ctx.lineTo(x2, y2);
+			ctx.stroke();
+			ctx.closePath();
+		}
+		function animate(ratio) {
+			ratio = ratio || 0;
+			for (y = 0; y < sig$.length - 1; y++) {
+				drawLine(seqx[y], seqy[y], seqx[y + 1], seqy[y + 1], ratio);
+				if (ask == 1) {
+					drawLine(symx[y], seqy[y], symx[y + 1], seqy[y + 1], ratio);
+				}
+			}
+			if (ratio < 1) {
+				window.requestAnimationFrame(function () {
+					animate(ratio + 0.003);
+				});
+			}
+		}
+		function symvert() {
+			ctx.beginPath();
+			ctx.arc(symx[0], seqy[0], 10, 0, 2 * Math.PI, false);
+			ctx.stroke();
+			ctx.closePath;
+			ctx.beginPath();
+			ctx.arc(symx[sig$.length - 1], seqy[sig$.length - 1], 7, 0, 2 * Math.PI, false);
+			ctx.fill();
+			ctx.closePath;
+		}
+	</script>
 </body>
 </html>
