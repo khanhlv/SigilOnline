@@ -364,6 +364,8 @@
 			//document.getElementById("B2").style.visibility = "visible";
 		}
 		function chktext() {
+			gtag('event', 'click', {'event_name': 'maker'});
+			
 			tx = document.getElementById("Q1").value;
 			if (tx.length < 2) {
 				alert("Nhập ý định của bạn");
