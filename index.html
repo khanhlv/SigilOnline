@@ -434,6 +434,7 @@
 			lt = "";
 		}
 		function clearall() {
+			gtag('event', 'click_clear', {'event_name': 'clear'});
 			ask = 0;
 			ctx.clearRect(0, 0, 591, 591);
 			ctx.beginPath();
@@ -463,6 +464,7 @@
 			draw2();
 		}
 		function getpng() {
+			gtag('event', 'click_copy', {'event_name': 'copy'});
 			var ca = document.getElementById("canv1");
 			var da = ca.toDataURL("image/png");
 			var wa = window.open("about:blank", "image from canvas");
